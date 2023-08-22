@@ -13,7 +13,7 @@ export const Wrapper = styled.div`
 export const LeftColumn = styled.div`
   margin: 0;
   padding: 0;
-  max-width: 350px;
+  min-width: 350px;
   height: auto;
   background: #fff;
   border-right: #dedede solid 1px;
@@ -22,6 +22,13 @@ export const LeftColumn = styled.div`
 export const LeftColumnHeader = styled.div`
   padding: 16px;
   border-bottom: #dedede solid 1px;
+  text-align: left;
+`;
+
+export const LeftColumnArchivedHeader = styled.div`
+  padding: 16px;
+  border-bottom: #dedede solid 1px;
+  border-top: #dedede solid 1px;
   text-align: left;
 `;
 

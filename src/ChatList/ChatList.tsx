@@ -5,10 +5,10 @@ import { Container, ChatListWrapper } from './styles';
 
 interface Props {
   chats: Chat[];
-  setChatTitle: (title: string) => void;
+  archiveChat?: (chatId: string) => void; 
 }
 
-const ChatList: React.FC<Props> = ({ chats, setChatTitle }) => {
+const ChatList: React.FC<Props> = ({ chats, archiveChat }) => {
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
 
   const filteredChats = useMemo(() => {
@@ -17,16 +17,18 @@ const ChatList: React.FC<Props> = ({ chats, setChatTitle }) => {
     return chatsFiltered;
   }, [chats]);
 
+  console.log('filteredChats: ', filteredChats);
+
   return (
     <Container>
       <ChatListWrapper>
         {filteredChats.map(chat => (
           <ChatListItem
-            key={chat.chatId}
+            key={chat.id}
             chat={chat}
-            setChatTitle={setChatTitle}
-            isSelected={chat.chatId === selectedChat}
+            isSelected={chat.id === selectedChat}
             setSelectedChat={setSelectedChat}
+            archiveChat={archiveChat}
           />
         ))}
       </ChatListWrapper>

@@ -1,15 +1,7 @@
 export interface Chat {
-  chatId: string;
+  id: string;
   type: string;
   title: string | null;
-  members: {
-    id: string;
-    firstname: string;
-    lastname: string;
-    profilePic: {
-      url: string;
-    } | null;
-  }[];
   lastMessage: Message;
 }
     
@@ -27,4 +19,5 @@ interface Sender {
   id: string;
   firstname: string;
   lastname: string;
+  profilePic: string;
 }

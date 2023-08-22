@@ -14,6 +14,7 @@ export const ChatListWrapper = styled.ul`
   list-style-type: none;
   padding-left: 0;
   margin-top: 0;
+  margin-bottom: 0;
 `;
 
 export const ChatListItemWrapper = styled.li<{ isSelected: boolean }>`

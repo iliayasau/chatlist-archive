@@ -7,26 +7,27 @@ import { MY_ID } from '../utils/constants';
 
 interface Props {
   chat: Chat;
-  setChatTitle: (title: string) => void;
   isSelected: boolean;
-  setSelectedChat: (chatId: string) => void;
+  setSelectedChat: (id: string) => void;
+  archiveChat?: (chatId: string) => void; 
 }
 
-const ChatListItem: React.FC<Props> = ({ chat, setChatTitle, isSelected, setSelectedChat }) => {
-  const { lastMessage, title, members } = chat;
+const ChatListItem: React.FC<Props> = ({ chat, isSelected, setSelectedChat, archiveChat }) => {
+  const { lastMessage, title } = chat;
   const handleClick = () => {
-    const generatedTitle = renderTitle(title, members);
-    setChatTitle(generatedTitle);
-    setSelectedChat(chat.chatId);
+    setSelectedChat(chat.id);
+    if (archiveChat) {
+      archiveChat(chat.id);
+    }
   };
   const formattedDate = formatDate(new Date(lastMessage.dateCreated));
   
   return (
     <ChatListItemWrapper onClick={handleClick} isSelected={isSelected}>
-      <ChatListItemAvatar type={chat.type} avatar={chat.type === 'single' ? getAvatarUrl(members) : null} />
+      <ChatListItemAvatar type={chat.type} avatar={chat.type === 'single' ? lastMessage.sender.profilePic : 'group'} />
       <ChatListItemInfo>
         <ChatListItemTitleWrapper>
-          <ChatListItemTitle>{renderTitle(title, members)}</ChatListItemTitle>
+          <ChatListItemTitle>{title}</ChatListItemTitle>
           <ChatListItemDate>{formattedDate}</ChatListItemDate>
         </ChatListItemTitleWrapper>
         <ChatListItemMessage>
@@ -36,45 +37,6 @@ const ChatListItem: React.FC<Props> = ({ chat, setChatTitle, isSelected, setSele
     </ChatListItemWrapper>
   );
 };
-
-function getAvatarUrl(members: { firstname: string, lastname: string, id: string, profilePic: { url: string } | null }[]): string {
-  for (let member of members) {
-    if (member.id !== MY_ID && member.profilePic) {
-      return member.profilePic.url;
-    }
-  }
-  return '';
-}
-
-function renderTitle(title: string | null, members: { firstname: string, lastname: string }[]): string {
-  if (title) {
-    return title;
-  }
-    
-    let generatedTitle = members.map(member => `${member.firstname} ${member.lastname}`).join(', ');
-
-    if (generatedTitle.length > 25) {
-      let trimmedTitle = '';
-      let count = 0;
-      for (let member of members) {
-        const nextTitle = `${trimmedTitle}${member.firstname} ${member.lastname}, `;
-        if (nextTitle.length > 25) {
-          break;
-        }
-        count++;
-        trimmedTitle = nextTitle;
-      }
-
-      const remainingMembers = members.length - count;
-      if (remainingMembers > 0) {
-        trimmedTitle = trimmedTitle.endsWith(', ') ? trimmedTitle.slice(0, -2) : trimmedTitle;
-        trimmedTitle += ` + ${remainingMembers} people`;
-      }
-          
-      return trimmedTitle.trim();
-    }
-    return generatedTitle;
-  }
 
   function renderSender(sender: { id: string, firstname: string, lastname: string }): string {
     if (sender.id === MY_ID) {
